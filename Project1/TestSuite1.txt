@@ -1,0 +1,17 @@
+*** Settings ***
+Library           SeleniumLibrary
+
+*** Variables ***
+${url}            http://opensource.demo.orangehrmlive.com/login
+@{Credentials}    Admin    admin
+&{Login}          Usename=Admin    Password=admin
+
+*** Test Cases ***
+Test 1
+    Open Browser    ${url}    chrome
+    Input Text    txtUsername    @{Credentials}[0]
+    Input Password    txtPassword    &{Login}[Password]
+    Click Button    btnLogin
+    Wait Until Page Contains    Dashboard
+    Log To Console    %{username} ran this test on %{os}
+    Close Browser

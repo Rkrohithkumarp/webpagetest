@@ -1,0 +1,34 @@
+*** Settings ***
+Library           SeleniumLibrary
+
+*** Variables ***
+${urlF-secure}    https://www.f-secure.com/pl_PL/f-secure
+${url-job}        https://emp.jobylon.com/jobs/16654-f-secure-quality-engineer/
+@{Titles}         F-Secure | Cyber Security Solutions for your Home and Business    About Us | F-Secure    Job Openings | F-Secure
+&{Credentials}    Firstname=AABBCCDD    Lastname= EEFFGGHH    Email=email123@xyz.com    Phone=123456789
+
+*** Test Cases ***
+TC1
+    Open Browser    ${urlF-secure}    chrome
+    Title Should Be    @{Titles}[0]
+    Click Element    //a[contains(text(),'Informacje')]
+    Title Should Be    @{Titles}[1]
+    Mouse Over    //a[contains(text(),'Careers')]
+    Click Element    //a[contains(text(),'Job Openings')]
+    Sleep    8 seconds
+    Title Should Be    @{Titles}[2]
+    Click Element    css=span.filter-option.pull-left
+    Select From List By Label    id=job-city    Poznań
+    Execute Javascript    if($("*:contains('Quality Engineer')").length <0) console.log('Job offer found');
+    Sleep    5 seconds
+    Execute Javascript    window.scrollTo(0,400)
+    Click Element    (//a[contains(text(),'View job')])[3]
+    Comment    This is new window
+    Sleep    10 seconds
+    Select Window    url= ${url-job}
+    Click Element    css=span.placeholder
+    Input Text    id_first_name    &{Credentials}[Firstname]
+    Input Text    id_last_name    &{Credentials}[Lastname]
+    Input Text    id_phone    &{Credentials}[Phone]
+    Click Element    submit-id-submit
+    Wait Until Page Contains    This field is required.    10 seconds
